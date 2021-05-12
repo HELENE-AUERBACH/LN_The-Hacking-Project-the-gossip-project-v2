@@ -11,16 +11,7 @@ class GossipsController < ApplicationController
 
   def show
     # Méthode qui récupère le potin concerné et l'envoie à la view show (show.html.erb) pour affichage
-    @gossip_hash = { "gossip" => nil, "index" => -1 }
-    gossip_id = params[:id].to_i
-    puts "$" * 60
-    puts "gossip_id : #{gossip_id}"
-    if (gossip_id != -1)
-      gossip = Gossip.find(gossip_id)
-      @gossip_hash = { "gossip" => gossip, "index" => gossip_id }
-      puts "gossip_hash : #{@gossip_hash}"
-    end
-    puts "$" * 60
+    @gossip_hash = get_gossip_hash 
   end
 
   def new
@@ -53,16 +44,7 @@ class GossipsController < ApplicationController
 
   def edit
     # Méthode qui récupère le potin concerné et l'envoie à la view edit (edit.html.erb) pour affichage dans un formulaire d'édition
-    @gossip_hash = { "gossip" => nil, "index" => -1 }
-    gossip_id = params[:id].to_i
-    puts "$" * 60
-    puts "gossip_id : #{gossip_id}"
-    if (gossip_id != -1)
-      gossip = Gossip.find(gossip_id)
-      @gossip_hash = { "gossip" => gossip, "index" => gossip_id }
-      puts "gossip_hash : #{@gossip_hash}"
-    end
-    puts "$" * 60
+    @gossip_hash = get_gossip_hash 
   end
 
   def update
@@ -95,10 +77,27 @@ class GossipsController < ApplicationController
     puts "Ceci est le contenu du hash params : #{params}"
     puts "gossip_id : #{params[:id]}"
     @gossip.find_by(id: params[:id])
-    if @gossip.nil?
+    if !@gossip.nil?
       @gossip.destroy
       redirect_to action: :index, notice: 'Ton "sale petit" potin a bien été supprimé en base : plus personne ne saura que tu as un jour osé le proférer !'
     end
     puts "$" * 60
+  end
+
+  private
+
+  def get_gossip_hash
+    @gossip_hash = { "gossip" => nil, "index" => -1 }
+    gossip_id = params[:id].to_i
+    gossip = nil
+    puts "$" * 60
+    puts "gossip_id : #{gossip_id}"
+    if gossip_id.between?(1, Gossip.count)
+      gossip = Gossip.find(gossip_id)
+    end
+    @gossip_hash = { "gossip" => gossip, "index" => gossip_id }
+    puts "gossip_hash : #{@gossip_hash}"
+    puts "$" * 60
+    @gossip_hash
   end
 end
