@@ -1,0 +1,25 @@
+<style type="text/css">
+  .content {
+    font-style: italic;
+    border-radius: 10px !important;
+    text-indent: 12px !important;
+    width: auto !important;
+    padding: 0px 8px !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    font: bold 11px / 20px &quot;Helvetica Neue&quot;, Helvetica, sans-serif !important;
+    --color: rgb(255, 255, 255) !important;
+    }
+</style>
+
+<h1>Voici la page du potin n°<%= @gossip_hash['index'] %></h1>
+<div>
+  <% if !@gossip_hash['gossip'].nil? %>
+    <p class="author">Son auteur : <em><%= link_to "#{@gossip_hash['gossip'].author.first_name} #{@gossip_hash['gossip'].author.last_name}", user_path(@gossip_hash['gossip'].author.id) %></em></p>
+    <p>Son titre : <%= @gossip_hash['gossip'].title %></p>
+    <p>Le contenu du potin : <p class="content"><%= @gossip_hash['gossip'].content %></p></p>
+    <p>La date de création du potin : <%= @gossip_hash['gossip'].created_at %></p>
+  <% else %>
+    <p>Aucun potin de n°<%= @gossip_hash['index'] %> n'existe dans la base!</p>
+  <% end %>
+</div>

@@ -1,0 +1,49 @@
+<style type="text/css">
+  table {
+    margin:auto;
+  }
+  table,
+  td {
+    border: 1px solid #333;
+  }
+
+  thead,
+  tfoot {
+    background-color: #333;
+    color: #fff;
+  }
+</style>
+
+<div>
+  <h1>Bienvenue sur l'application de la communauté de <em>"The Hacking Project"</em></h1>
+  <p>Il se passe plein de choses à Paris, Lyon, Montpellier, Bordeaux et ce site va te permettre de connaître tous les potins sur tes camarades moussaillons.</p>
+  <BR>
+  <% if !notice.nil? %>
+    <div class="alert alert-success" role="alert">
+      <p id="notice"><%= notice %></p>
+    </div>
+  <% end %>
+  <table>
+    <caption>Voici la liste des potins qui circulent...</caption>
+    <thead>
+      <tr>
+        <th>Prénom de l'auteur</th>
+        <th>Titre</th>
+        <th>Page</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @gossips.each do |gossip| %>
+        <tr>
+          <td><%= gossip.author.first_name %></td>
+          <td><%= gossip.title %></td>
+          <td><%= link_to "Potin n°#{gossip.id}", gossip_path(gossip.id) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div><BR>
+<div>
+  <p><a href="/gossips/new/">Ajoute un nouveau potin à la base</a></p>
+</div>
+

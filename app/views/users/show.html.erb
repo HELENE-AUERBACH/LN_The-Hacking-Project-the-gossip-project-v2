@@ -1,0 +1,12 @@
+<h1>Voici la page profil de l'auteur de potins n°<%= @user_hash['index'] %></h1>
+<div>
+  <% if !@user_hash['user'].nil? %>
+    <p>Son prénom : <%= @user_hash['user'].first_name %></p>
+    <p>Son nom : <%= @user_hash['user'].last_name %></p>
+    <p>Son email : <%= @user_hash['user'].email %></p>
+    <p>Son age : <%= @user_hash['user'].age %></p>
+    <p>Sa ville : <%= @user_hash['user'].city.name %> (<%= @user_hash['user'].city.zip_code %>)</p>
+  <% else %>
+    <p>Aucun utilisateur de n°<%= @user_hash['index'] %> n'existe dans la base!</p>
+  <% end %>
+</div>
