@@ -90,7 +90,7 @@ class GossipsController < ApplicationController
     @gossip_hash = get_gossip_hash 
     if !@gossip_hash['gossip'].nil?
       @gossip_hash['gossip'].destroy
-      redirect_to action: :index, status: :ok, notice: 'Ton "sale petit" potin a bien été supprimé en base : plus personne ne saura que tu as un jour osé le proférer !'
+      redirect_to gossips_path, status: :ok, notice: 'Ton "sale petit" potin a bien été supprimé en base : plus personne ne saura que tu as un jour osé le proférer !'
     end
     puts "$" * 60
   end
