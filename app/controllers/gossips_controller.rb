@@ -24,7 +24,7 @@ class GossipsController < ApplicationController
     # pour info, le contenu de ce formulaire sera accessible dans le hash params (ton meilleur pote)
     # Une fois la création faite, on redirige généralement vers la méthode show (pour afficher le potin créé)
     puts "$" * 60
-    puts "Salut, je suis dans le serveur"
+    puts "Salut, je suis dans le serveur pour une création"
     puts "Ceci est le contenu du hash params : #{params}"
     puts "Trop bien ! Et ceci est ce que l'utilisateur a passé dans le champ title : #{params["title"]}"
     puts "De la bombe, et du coup ça, ça doit être ce que l'utilisateur a passé dans le champ content : #{params["content"]}"
@@ -34,7 +34,7 @@ class GossipsController < ApplicationController
     if @gossip.save # essaie de sauvegarder en base @gossip
       # si ça marche, il redirige vers la page d'index du site
       #redirect_to action: :index
-      redirect_to gossips_path(@gossip), notice: 'Ton super potin a bien été créé en base pour la postérité !'
+      redirect_to gossips_path, status: :ok, notice: 'Ton super potin a bien été créé en base pour la postérité !'
     else
       # sinon, il render la view new (qui est celle sur laquelle on est déjà)
       render 'new'
@@ -52,17 +52,28 @@ class GossipsController < ApplicationController
     # pour info, le contenu de ce formulaire sera accessible dans le hash params
     # Une fois la modification faite, on redirige généralement vers la méthode show (pour afficher le potin modifié)
     puts "$" * 60
-    puts "Salut, je suis dans le serveur"
+    puts "Salut, je suis dans le serveur pour une mise à jour"
     puts "Ceci est le contenu du hash params : #{params}"
     puts "Trop bien ! Et ceci est ce que l'utilisateur a passé dans le champ title : #{params["title"]}"
     puts "De la bombe, et du coup ça, ça doit être ce que l'utilisateur a passé dans le champ content : #{params["content"]}"
-    @gossip = Gossip.update("title" => params[:title],
-                            "content" => params[:content],
-                            "author" => User.find(ANONYMOUS_USER_ID))
-    if @gossip.save # essaie de sauvegarder en base @gossip
-      # si ça marche, il redirige vers la méthode show (pour afficher le potin modifié)
-      redirect_to gossips_path(@gossip), notice: 'Ton super potin a bien été mis à jour en base : il est bien plus "dévastateur" désormais !'
-    else
+    ok = false
+    @gossip = Gossip.find(params[:id])
+    @gossip_hash = { "gossip" => @gossip, "index" => params[:id] }
+    puts "gossip_hash : #{@gossip_hash}"
+    if !params[:title].nil? && !params[:content].nil?
+      gossip_saved = @gossip.update("title" => params[:title], # essaie de sauvegarder en base gossip
+                                    "content" => params[:content],
+                                    "author" => User.find(ANONYMOUS_USER_ID))
+      if gossip_saved
+        # si ça a marché, il redirige vers la méthode index
+        ok = true
+        @gossip = Gossip.find(params[:id])
+        @gossip_hash = { "gossip" => @gossip, "index" => params[:id] }
+        puts "gossip_hash : #{@gossip_hash}"
+        redirect_to gossips_path, status: :ok, notice: 'Ton super potin a bien été mis à jour en base : il est bien plus "dévastateur" désormais !'
+      end
+    end
+    if !ok
       # sinon, il render la view edit (qui est celle sur laquelle on est déjà)
       render 'edit'
     end
@@ -73,13 +84,13 @@ class GossipsController < ApplicationController
     # Méthode qui récupère le potin concerné et le détruit en base
     # Une fois la suppression faite, on redirige généralement vers la méthode index (pour afficher la liste à jour)
     puts "$" * 60
-    puts "Salut, je suis dans le serveur"
+    puts "Salut, je suis dans le serveur pour une suppression"
     puts "Ceci est le contenu du hash params : #{params}"
     puts "gossip_id : #{params[:id]}"
-    @gossip.find_by(id: params[:id])
-    if !@gossip.nil?
-      @gossip.destroy
-      redirect_to action: :index, notice: 'Ton "sale petit" potin a bien été supprimé en base : plus personne ne saura que tu as un jour osé le proférer !'
+    @gossip_hash = get_gossip_hash 
+    if !@gossip_hash['gossip'].nil?
+      @gossip_hash['gossip'].destroy
+      redirect_to action: :index, status: :ok, notice: 'Ton "sale petit" potin a bien été supprimé en base : plus personne ne saura que tu as un jour osé le proférer !'
     end
     puts "$" * 60
   end
@@ -92,8 +103,9 @@ class GossipsController < ApplicationController
     gossip = nil
     puts "$" * 60
     puts "gossip_id : #{gossip_id}"
-    if gossip_id.between?(1, Gossip.count)
-      gossip = Gossip.find(gossip_id)
+    nb_total = Gossip.last.id
+    if gossip_id.between?(1, nb_total)
+      gossip = Gossip.find_by(id: gossip_id)
     end
     @gossip_hash = { "gossip" => gossip, "index" => gossip_id }
     puts "gossip_hash : #{@gossip_hash}"

@@ -19,6 +19,12 @@
     <p>Son titre : <%= @gossip_hash['gossip'].title %></p>
     <p>Le contenu du potin : <p class="content"><%= @gossip_hash['gossip'].content %></p></p>
     <p>La date de création du potin : <%= @gossip_hash['gossip'].created_at %></p>
+    <p>La date de dernière modification du potin : <%= @gossip_hash['gossip'].updated_at %></p>
+    <br />
+    <p><a href="<%= edit_gossip_path(@gossip_hash['index']) %>" class="btn btn-primary btn-sm" role="button">Modifier le potin</a></p><span>
+    <p>
+      <a href="<%= gossip_path(@gossip_hash['index']) %>" class="btn btn-danger btn-sm" role="button" data-confirm="Êtes-vous certain de vouloir supprimer définitivement ce potin?" data-method="DELETE">Supprimer le potin</a>
+    </p>
   </div>
 <% else %>
   <div class="alert alert-danger" role="alert">

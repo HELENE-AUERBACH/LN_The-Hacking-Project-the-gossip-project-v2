@@ -1,0 +1,38 @@
+<% if !@gossip_hash['gossip'].nil? %>
+  
+  <h1>Modifie ton potin n°<%= @gossip_hash['index'] %></h1>
+
+  <% if !@gossip.nil? && @gossip.errors.any? %>
+    <div class="alert alert-danger" role="alert">
+      <p>Nous n'avons pas réussi à mettre à jour le potin pour la (ou les) raison(s) suivante(s) :</p>
+      <ul>
+        <% @gossip.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  <%= form_tag gossip_path(@gossip_hash['index']), method: "post" do %>
+
+    <input type="hidden" name ="_method" value="put">
+
+    <%= label_tag 'Titre' %>
+    <%= text_field_tag 'title', (@gossip_hash['gossip'].title if !@gossip_hash['gossip'].title.nil?), size: 20, maxlength: 14 %>
+    <br /> <br />
+    
+    <%= label_tag 'Contenu' %>
+    <%= text_area_tag 'content', (@gossip_hash['gossip'].content if !@gossip_hash['gossip'].content.nil?), size: "25x10" %>
+    <br /> <br />
+    
+    <%= submit_tag "Enregistrer cette nouvelle version de ton potin" %>
+
+  <% end %>
+
+<% else %>
+
+  <div class="alert alert-danger" role="alert">
+    <p>Aucun potin de n°<%= @gossip_hash['index'] %> n'existe dans la base!</p>
+  </div>
+
+<% end %>
