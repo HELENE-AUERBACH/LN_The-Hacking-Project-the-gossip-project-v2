@@ -35,15 +35,15 @@ class GossipsController < ApplicationController
     puts "$" * 60
     puts "Salut, je suis dans le serveur"
     puts "Ceci est le contenu du hash params : #{params}"
-    puts "Trop bien ! Et ceci est ce que l'utilisateur a passé dans le champ gossip_title : #{params["gossip_title"]}"
-    puts "De la bombe, et du coup ça, ça doit être ce que l'utilisateur a passé dans le champ gossip_content : #{params["gossip_content"]}"
+    puts "Trop bien ! Et ceci est ce que l'utilisateur a passé dans le champ title : #{params["title"]}"
+    puts "De la bombe, et du coup ça, ça doit être ce que l'utilisateur a passé dans le champ content : #{params["content"]}"
     @gossip = Gossip.new("title" => params[:title],
                          "content" => params[:content],
                          "author" => User.find(ANONYMOUS_USER_ID))
     if @gossip.save # essaie de sauvegarder en base @gossip
       # si ça marche, il redirige vers la page d'index du site
       #redirect_to action: :index
-      redirect_to gossips_path(@gossip), notice: 'The super potin was succesfully created !'
+      redirect_to gossips_path(@gossip), notice: 'Ton super potin a bien été créé en base pour la postérité !'
     else
       # sinon, il render la view new (qui est celle sur laquelle on est déjà)
       render 'new'
@@ -72,14 +72,14 @@ class GossipsController < ApplicationController
     puts "$" * 60
     puts "Salut, je suis dans le serveur"
     puts "Ceci est le contenu du hash params : #{params}"
-    puts "Trop bien ! Et ceci est ce que l'utilisateur a passé dans le champ gossip_title : #{params["gossip_title"]}"
-    puts "De la bombe, et du coup ça, ça doit être ce que l'utilisateur a passé dans le champ gossip_content : #{params["gossip_content"]}"
+    puts "Trop bien ! Et ceci est ce que l'utilisateur a passé dans le champ title : #{params["title"]}"
+    puts "De la bombe, et du coup ça, ça doit être ce que l'utilisateur a passé dans le champ content : #{params["content"]}"
     @gossip = Gossip.update("title" => params[:title],
                             "content" => params[:content],
                             "author" => User.find(ANONYMOUS_USER_ID))
     if @gossip.save # essaie de sauvegarder en base @gossip
       # si ça marche, il redirige vers la méthode show (pour afficher le potin modifié)
-      redirect_to gossips_path(@gossip), notice: 'The super potin was succesfully updated !'
+      redirect_to gossips_path(@gossip), notice: 'Ton super potin a bien été mis à jour en base : il est bien plus "dévastateur" désormais !'
     else
       # sinon, il render la view edit (qui est celle sur laquelle on est déjà)
       render 'edit'
@@ -97,7 +97,7 @@ class GossipsController < ApplicationController
     @gossip.find_by(id: params[:id])
     if @gossip.nil?
       @gossip.destroy
-      redirect_to action: :index, notice: 'The ugly potin was succesfully deleted !'
+      redirect_to action: :index, notice: 'Ton "sale petit" potin a bien été supprimé en base : plus personne ne saura que tu as un jour osé le proférer !'
     end
     puts "$" * 60
   end
